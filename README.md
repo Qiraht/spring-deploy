@@ -16,5 +16,5 @@ Make sure to have Docker and Docker Compose installed.
 docker-compose up --build
 ```
 
-## API Endpoint
+## API Documentation
 Access OpenAPI Swagger on ```http://localhost:8080/swagger-ui.html```

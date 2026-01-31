@@ -22,8 +22,8 @@ jobs:
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
-          distribution: 'temurin'
+          java-version: "21"
+          distribution: "temurin"
 
       - name: Build application with Maven
         run: mvn clean package -DskipTests
@@ -46,7 +46,29 @@ jobs:
           cache-from: type=registry,ref=${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
           cache-to: type=inline
 
-      # � COPY DOCKER-COMPOSE TO VPS
+      # 🛠️ CREATE .ENV FILE ON VPS
+      - name: Create .env file on VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            mkdir -p ${{ env.APP_DIR }}
+            cat <<EOF > ${{ env.APP_DIR }}/.env
+            APP_PORT=9006
+            SPRING_PROFILES_ACTIVE=dev
+            TEST_FULLNAME="${{ secrets.TEST_FULLNAME }}"
+            TEST_EMAIL="${{ secrets.TEST_EMAIL }}"
+            DB_HOST=${{ secrets.DB_HOST }}
+            DB_PORT=${{ secrets.DB_PORT }}
+            DB_NAME=${{ secrets.DB_NAME }}
+            DB_USER=${{ secrets.DB_USER }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
+            EOF
+
+      # 📂 COPY DOCKER-COMPOSE TO VPS
       - name: Copy docker-compose to VPS
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -66,20 +88,23 @@ jobs:
           script: |
             cd ${{ env.APP_DIR }}
             echo "🚀 Starting deployment..."
-            
+
             echo "✅ Configuration files verified"
-            
+
+            # Ensure network exists
+            docker network inspect classroom_classroom_net >/dev/null 2>&1 || docker network create classroom_classroom_net
+
             # Pull latest image and deploy
             echo "📥 Pulling latest image..."
             docker compose pull
-            
+
             echo "🔄 Restarting services..."
             docker compose down
             docker compose up -d
-            
+
             echo "⏳ Waiting for health check..."
             sleep 10
-            
+
             # Verify deployment
             if docker compose ps | grep -q "Up"; then
               echo "✅ Deployment completed successfully!"

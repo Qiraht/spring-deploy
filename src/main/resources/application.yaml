@@ -2,11 +2,11 @@ spring:
     application:
         name: spring-asissted
 #    Use this if to run this app locally
-#    datasource:
-#        url: jdbc:mysql://localhost:3306/spring-blog-db
-#        username: root
-#        password: supersecretpassword  
-#        driver-class-name: com.mysql.cj.jdbc.Driver
+    datasource:
+        url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/spring-blog-db}
+        username: ${SPRING_DATASOURCE_USERNAME:root}
+        password: ${SPRING_DATASOURCE_PASSWORD:supersecretpassword}
+        driver-class-name: com.mysql.cj.jdbc.Driver
     jpa:
         hibernate:
             ddl-auto: update

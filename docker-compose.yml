@@ -1,33 +1,41 @@
 version: '3.0'
 
 services:
-  mysql:
-    image: mysql:8.0-bookworm
-    container_name: mysql-spring-assisted
-    environment:
-      - MYSQL_ROOT_PASSWORD=supersecretpasword
-      - MYSQL_DATABASE=spring-blog-db
-    ports:
-      - "3306:3306"
-    extra_hosts:
-      - "host.docker.internal:host-gateway" ## Docker
-    ##  - "host.containers.internal:host-gateway" ## Podman
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
-      interval: 30s
-      timeout: 30s
-      retries: 10
-      start_period: 40s
+#  mysql:
+#    image: mysql:8.0-bookworm
+#    container_name: mysql-spring-assisted
+#    environment:
+#      - MYSQL_ROOT_PASSWORD=supersecretpasword
+#      - MYSQL_DATABASE=spring-blog-db
+#    ports:
+#      - "3306:3306"
+#    extra_hosts:
+#      - "host.docker.internal:host-gateway" ## Docker
+#    ##  - "host.containers.internal:host-gateway" ## Podman
+#    healthcheck:
+#      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+#      interval: 30s
+#      timeout: 30s
+#      retries: 10
+#      start_period: 40s
 
-  spring-blog:
-    build: .
-    container_name: spring-blog
+  spring-deploy-student6-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spring-deploy-student6-app
     ports:
-      - "8080:8080"
+      - ${APP_PORT:-9006}:${APP_PORT:-9006}
+    env_file:
+      - .env
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-spring-assisted:3306/spring-blog-db
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=supersecretpasword
-    depends_on:
-      mysql:
-        condition: service_healthy
+      - SPRING_DATASOURCE_URL=jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+#    depends_on:
+#      mysql:
+#        condition: service_healthy
+
+networks:
+  classroom_classroom_net:
+    external: true

@@ -66,6 +66,7 @@ jobs:
             DB_USER=${{ secrets.DB_USER }}
             DB_PASSWORD=${{ secrets.DB_PASSWORD }}
             DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
+            JWT_SECRET=${{ secrets.JWT_SECRET }}
             EOF
 
       # 📂 COPY DOCKER-COMPOSE TO VPS

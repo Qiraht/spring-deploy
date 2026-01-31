@@ -16,4 +16,6 @@ RUN apk add --no-cache wget
 
 COPY --from=build /app/target/*.jar /app/app.jar
 
+EXPOSE 9006
+
 ENTRYPOINT [ "java", "-jar", "app.jar" ]

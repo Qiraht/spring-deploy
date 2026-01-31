@@ -1,34 +1,38 @@
 spring:
-    application:
-        name: spring-asissted
-#    Use this if to run this app locally
-    datasource:
-        url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/spring-blog-db}
-        username: ${SPRING_DATASOURCE_USERNAME:root}
-        password: ${SPRING_DATASOURCE_PASSWORD:supersecretpassword}
-        driver-class-name: com.mysql.cj.jdbc.Driver
-    jpa:
-        hibernate:
-            ddl-auto: update
-        show-sql: true
-        properties:
-            hibernate:
-                dialect: org.hibernate.dialect.MySQLDialect
-    security:
-        user:
-            name: admin
-            password: password
-management:
-    endpoints:
-        web:
-            exposure:
-                include: "*"
-    endpoint:
-        health:
-            show-details: always
-        metrics:
-            enabled: true
-jwt:
-    secret: "v6yB8p98p9zB6X5y8p9zB6X5y8p9zB6X5y8p9zB6X5y8p9zB6X5y8p9zB6X5y8p9zB6X5y8p9zB6X5y8p"
-    expiration: 86400000 # 24 hours
+  application:
+    name: spring-asissted
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:spring-blog-db}?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD:supersecretpassword}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        "[jdbc.time_zone]": UTC
+  security:
+    user:
+      name: ${SECURITY_USER_NAME:admin}
+      password: ${SECURITY_USER_PASSWORD:password}
 
+server:
+  port: ${APP_PORT:9006}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      enabled: true
+
+jwt:
+  secret: ${JWT_SECRET:v6yB8p98p9zB6X5y8p9zB6X5y8p9zB6X5y8p9zB6X5y8p9zB6X5y8p9zB6X5y8p9zB6X5y8p9zB6X5y8p9zB6X5y8p}
+  expiration: ${JWT_EXPIRATION:86400000}

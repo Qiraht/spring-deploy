@@ -18,6 +18,16 @@ spring:
         user:
             name: admin
             password: password
+management:
+    endpoints:
+        web:
+            exposure:
+                include: "*"
+    endpoint:
+        health:
+            show-details: always
+        metrics:
+            enabled: true
 jwt:
     secret: "v6yB8p98p9zB6X5y8p9zB6X5y8p9zB6X5y8p9zB6X5y8p9zB6X5y8p9zB6X5y8p9zB6X5y8p9zB6X5y8p"
     expiration: 86400000 # 24 hours

@@ -23,7 +23,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: spring-deploy-student6-app
+    container_name: ${DOCKERHUB_USERNAME}/spring-deploy-student6-app:latest
     ports:
       - ${APP_PORT:-9006}:${APP_PORT:-9006}
     env_file:

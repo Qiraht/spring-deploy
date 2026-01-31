@@ -40,3 +40,6 @@ compile_errors.txt
 ### OS Specific ###
 .DS_Store
 Thumbs.db
+
+.env
+.env.*

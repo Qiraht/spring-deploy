@@ -41,5 +41,6 @@ compile_errors.txt
 .DS_Store
 Thumbs.db
 
+## Environment file
 .env
 .env.*
